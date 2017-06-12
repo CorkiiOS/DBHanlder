@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/DBHanlder.svg?style=flat)](http://cocoapods.org/pods/DBHanlder)
 *	An easy way to handler sqlite
 * model->sql->deal sql
-[![类介绍](/Users/mac/Desktop/3B0CF6AD-D928-4D42-B18C-CBA9A4F2CED7.png)](http://cocoapods.org/pods/DBHanlder)
+[![类介绍](https://github.com/corkiios/DBHanlder/raw/master/images-folder/3B0CF6AD-D928-4D42-B18C-CBA9A4F2CED7.ong)](http://cocoapods.org/pods/DBHanlder)
 
 
 
