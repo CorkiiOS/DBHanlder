@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DBHanlder_Example' do
+  pod 'DBHanlder', :path => '../'
+
+  target 'DBHanlder_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
