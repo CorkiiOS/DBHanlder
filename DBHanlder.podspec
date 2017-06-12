@@ -11,14 +11,12 @@ Pod::Spec.new do |s|
   s.version          = '0.1.0'
   s.summary          = 'A short description of DBHanlder.'
 
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  s.description      = "一个轻量级通过模型操作数据库，对FMDB的二次封装，动态构建sql"
 
   s.homepage         = 'https://github.com/corkiios/DBHanlder'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'corkiios' => '453664988@qq.com' }
+  s.author           = { 'corkiios' => '675053587@qq.com' }
   s.source           = { :git => 'https://github.com/corkiios/DBHanlder.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
