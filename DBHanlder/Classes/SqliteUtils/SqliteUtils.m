@@ -68,7 +68,7 @@
 
 }
 
-+ (BOOL)saveObjcet:(id)object
++ (BOOL)saveObject:(id)object
               udid:(NSString *)udid {
     
     BOOL isBuildTableSuccess = [self createTableWithClass:[object class] udid:udid];
@@ -90,7 +90,7 @@
     return isSaveSuccess;
 }
 
-+ (BOOL)deleteObjcet:(id)object
++ (BOOL)deleteObject:(id)object
                 udid:(NSString *)udid {
     
     BOOL isBuildTableSuccess = [self createTableWithClass:[object class] udid:udid];

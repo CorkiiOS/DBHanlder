@@ -9,6 +9,7 @@
 #import "DB_ViewController.h"
 #import "DB_TestModel.h"
 #import "SqliteQueueUtils.h"
+#import "SqliteUtils.h"
 @interface DB_ViewController ()
 
 @end
@@ -31,7 +32,7 @@
     model.sex = @"yayaydadadada";
     model.sign = @"牛牛牛大大";
     model.key = @"336699ssssss";
-    [[SqliteQueueUtils sharedInstance] saveObject:model udid:nil];
+    [SqliteUtils saveObject:model udid:@"123456"];
 }
 
 - (void)saveModels {

@@ -16,7 +16,7 @@
  @param udid 用户体系
  @return 结果
  */
-+ (BOOL)saveObjcet:(id<ISqliteModel>)object
++ (BOOL)saveObject:(id<ISqliteModel>)object
               udid:(NSString *)udid;
 
 /**
@@ -25,7 +25,7 @@
  @param udid 用户体系
  @return 结果
  */
-+ (BOOL)deleteObjcet:(id<ISqliteModel>)object
++ (BOOL)deleteObject:(id<ISqliteModel>)object
                 udid:(NSString *)udid;
 
 /**
