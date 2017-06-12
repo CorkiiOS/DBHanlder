@@ -1,0 +1,24 @@
+PODS:
+  - DBHanlder (0.1.0):
+    - DBHanlder/standard (= 0.1.0)
+    - FMDB
+  - DBHanlder/standard (0.1.0):
+    - FMDB
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+
+DEPENDENCIES:
+  - DBHanlder (from `../`)
+
+EXTERNAL SOURCES:
+  DBHanlder:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DBHanlder: bd4807f593eda5a7d215454672b05b7f37377d78
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+
+PODFILE CHECKSUM: dc18d160b0810fd471dc7cda549375ae84c75dce
+
+COCOAPODS: 1.3.0.beta.1

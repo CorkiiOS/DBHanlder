@@ -24,6 +24,8 @@
 		70C585EA5FF06E21B936B689 /* Pods_DBHanlder_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FF3A0A52F802E3D2B65094A /* Pods_DBHanlder_Example.framework */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		A02586621EEE7E720090A381 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A02586611EEE7E720090A381 /* libsqlite3.0.tbd */; };
+		A0AFE8191EEE91FD0068D1DA /* DB_TestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0AFE8181EEE91FD0068D1DA /* DB_TestModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,11 +64,14 @@
 		6ACF1FF4F7EC33C3094BDA07 /* Pods-DBHanlder_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBHanlder_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DBHanlder_Tests/Pods-DBHanlder_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8BF700662DE7C41D3FBF57D4 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		8BF700662DE7C41D3FBF57D4 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		994ED56350FFDE785F7FDFDE /* Pods-DBHanlder_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBHanlder_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DBHanlder_Example/Pods-DBHanlder_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		9FF3A0A52F802E3D2B65094A /* Pods_DBHanlder_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DBHanlder_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD5695746806D9666ED4D3F8 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		C51A1B32528FF99858710523 /* DBHanlder.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = DBHanlder.podspec; path = ../DBHanlder.podspec; sourceTree = "<group>"; };
+		A02586611EEE7E720090A381 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		A0AFE8171EEE91FD0068D1DA /* DB_TestModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DB_TestModel.h; sourceTree = "<group>"; };
+		A0AFE8181EEE91FD0068D1DA /* DB_TestModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DB_TestModel.m; sourceTree = "<group>"; };
+		AD5695746806D9666ED4D3F8 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		C51A1B32528FF99858710523 /* DBHanlder.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DBHanlder.podspec; path = ../DBHanlder.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A02586621EEE7E720090A381 /* libsqlite3.0.tbd in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
@@ -119,6 +125,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A02586611EEE7E720090A381 /* libsqlite3.0.tbd */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
@@ -137,6 +144,8 @@
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* DB_ViewController.h */,
 				6003F5A6195388D20070C39A /* DB_ViewController.m */,
+				A0AFE8171EEE91FD0068D1DA /* DB_TestModel.h */,
+				A0AFE8181EEE91FD0068D1DA /* DB_TestModel.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -397,6 +406,7 @@
 				6003F59E195388D20070C39A /* DB_AppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* DB_ViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				A0AFE8191EEE91FD0068D1DA /* DB_TestModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,7 +489,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -512,7 +522,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
