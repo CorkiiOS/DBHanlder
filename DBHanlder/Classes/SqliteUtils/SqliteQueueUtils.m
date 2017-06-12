@@ -9,7 +9,7 @@
 #import "SqliteFileManager.h"
 #import "SqliteBuilder.h"
 #import "SqliteObject.h"
-#import "FMDB.h"
+#import <FMDB/FMDB.h>
 @interface SqliteQueueUtils()
 
 //@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
