@@ -40,7 +40,6 @@
             }else {
                 dbPath = [dbPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.db", udid]];
             }
-            const char * path = [dbPath fileSystemRepresentation];
             _dbQueue = [[FMDatabaseQueue alloc] initWithPath:dbPath];
             lastUdid = udid;
         }

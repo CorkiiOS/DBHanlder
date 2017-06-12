@@ -60,8 +60,6 @@
     
     [SqliteObject getColumnNamesAndValuesWithObject:object completion:^(NSString *tableName, NSString *primaryKey, NSArray *columns, NSArray *values) {
         
-        NSString *columnNamesSql = [columns componentsJoinedByString:@","];
-        NSString *valuesSql = [values componentsJoinedByString:@"','"];
         NSMutableArray *tempResult = [NSMutableArray array];
         
         for(int i = 0; i < columns.count; i++) {
@@ -83,8 +81,6 @@
     
     [SqliteObject getColumnNamesAndValuesWithObject:object completion:^(NSString *tableName, NSString *primaryKey, NSArray *columns, NSArray *values) {
         
-        NSString *columnNamesSql = [columns componentsJoinedByString:@","];
-        NSString *valuesSql = [values componentsJoinedByString:@"','"];
         NSString *selectSql = [NSString stringWithFormat:@"select * from %@ where %@ = '%@'", tableName, primaryKey, [object valueForKeyPath:primaryKey]];
         NSArray *res = [SqliteDeals querySql:selectSql udid:udid];
         

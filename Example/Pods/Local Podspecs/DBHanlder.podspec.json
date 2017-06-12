@@ -1,9 +1,9 @@
 {
   "name": "DBHanlder",
   "version": "0.1.0",
-  "summary": "A short description of DBHanlder.",
+  "summary": "DBHanlder.sqlite",
   "description": "一个轻量级通过模型操作数据库，对FMDB的二次封装，动态构建sql",
-  "homepage": "https://github.com/corkiios/DBHanlder",
+  "homepage": "https://github.com/CorkiiOS/DBHanlder",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,7 +12,7 @@
     "corkiios": "675053587@qq.com"
   },
   "source": {
-    "git": "https://github.com/corkiios/DBHanlder.git",
+    "git": "https://github.com/CorkiiOS/DBHanlder.git",
     "tag": "0.1.0"
   },
   "platforms": {
