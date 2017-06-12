@@ -6,13 +6,22 @@
 //
 
 #import "SqliteQueueUtils.h"
+#import "SqliteFileManager.h"
 #import "SqliteBuilder.h"
 #import "SqliteObject.h"
 #import "FMDB.h"
 @interface SqliteQueueUtils()
-@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
+
+//@property (nonatomic, strong) FMDatabaseQueue *dbQueue;
+{
+    FMDatabaseQueue *_dbQueue;
+    NSString *lastUdid;
+}
+- (FMDatabaseQueue *(^)(NSString *))dbQueue;
 @end
+
 @implementation SqliteQueueUtils
+
 + (instancetype)sharedInstance {
     static SqliteQueueUtils *u = nil;
     static dispatch_once_t onceToken;
@@ -22,20 +31,39 @@
     return u;
 }
 
-- (FMDatabaseQueue *)dbQueue {
-    if (!_dbQueue) {
-        _dbQueue = [[FMDatabaseQueue alloc] initWithPath:@"/Users/sanmi/Desktop/123.db"];
-    }
-    return _dbQueue;
+- (FMDatabaseQueue *(^)(NSString *))dbQueue {
+    return ^(NSString *udid){
+        if (!_dbQueue || udid != lastUdid) {
+            NSString *dbPath = [SqliteFileManager buidlFolderWithName:nil];
+            if (udid.length == 0) {
+                dbPath = [dbPath stringByAppendingPathComponent:@"common.db"];
+            }else {
+                dbPath = [dbPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.db", udid]];
+            }
+            const char * path = [dbPath fileSystemRepresentation];
+            _dbQueue = [[FMDatabaseQueue alloc] initWithPath:dbPath];
+            lastUdid = udid;
+        }
+        return _dbQueue;
+    };
 }
 
-- (void)buildTableByCls:(Class)cls
-                   udid:(NSString *)udid{
+- (BOOL)buildTableByCls:(Class)cls
+                   udid:(NSString *)udid {
     
-    NSString *sql = [SqliteBuilder tableSqlBuildWithObject:[cls new] udid:udid];
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:sql];
+    
+    NSString *sql = [SqliteBuilder tableSqlBuildWithObject:[cls new]
+                                                      udid:udid];
+    NSString *tableName = [SqliteObject getTableNameWithObjectClass:cls];
+    __block BOOL isSuccess = NO;
+    [self.dbQueue(udid) inDatabase:^(FMDatabase *db) {
+        
+        isSuccess = [db tableExists:tableName];
+        if (!isSuccess) {
+            isSuccess = [db executeUpdate:sql];
+        }
     }];
+    return isSuccess;
 }
 
 - (void)saveObjects:(NSArray <id<ISqliteModel>>*)objects
@@ -44,13 +72,26 @@
     if (objects.count == 0) {
         return;
     }
+    if (![self buildTableByCls:[objects.firstObject class] udid:udid]) {
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         
-        [self.dbQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        [self.dbQueue(udid) inTransaction:^(FMDatabase *db, BOOL *rollback) {
             for (id<ISqliteModel> object in objects) {
-                NSString *sql = [SqliteBuilder saveSqlBuildWithObject:object
-                                                                 udid:udid];
-                [db executeUpdate:sql];
+
+                NSString *selectSql = [SqliteBuilder querySqlBuildWithObject:object
+                                                                        udid:udid];
+                FMResultSet *set = [db executeQuery:selectSql];
+                if ([set next]) {
+                    [db executeUpdate:[SqliteBuilder updateSqlBuildWithObject:object
+                                                                         udid:udid]];
+                }else {
+                    [db executeUpdate:[SqliteBuilder insertSqlBuildWithObject:object
+                                                                         udid:udid]];
+ 
+                }
+                [set close];
             }
         }];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -61,17 +102,31 @@
 
 - (void)saveObject:(id<ISqliteModel>)object
               udid:(NSString *)udid {
-    NSString *sql = [SqliteBuilder saveSqlBuildWithObject:object
-                                                     udid:udid];
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:sql];
+    if (![self buildTableByCls:[object class] udid:udid]) {
+        return;
+    }
+    [self.dbQueue(udid) inDatabase:^(FMDatabase *db) {
+        NSString *selectSql = [SqliteBuilder querySqlBuildWithObject:object
+                                                                udid:udid];
+        FMResultSet *set = [db executeQuery:selectSql];
+        if ([set next]) {
+            [db executeUpdate:[SqliteBuilder updateSqlBuildWithObject:object
+                                                                 udid:udid]];
+        }else {
+            [db executeUpdate:[SqliteBuilder insertSqlBuildWithObject:object
+                                                                 udid:udid]];
+        }
+        [set close];
     }];
 }
 
 - (NSArray <id<ISqliteModel>>*)qyeryObjectsByCls:(Class)cls
                                  udid:(NSString *)udid {
+    if (![self buildTableByCls:cls udid:udid]) {
+        return nil;
+    }
     __block NSMutableArray *objects = [NSMutableArray array];
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
+    [self.dbQueue(udid) inDatabase:^(FMDatabase *db) {
         NSString *sql = [SqliteBuilder queryAllSqlBuildWithClass:cls
                                                             udid:udid];
         FMResultSet *rs = [db executeQuery:sql];
@@ -79,7 +134,7 @@
         while ([rs next]) {
             id obj = [[cls alloc] init];
             for (NSString *key in colums) {
-                id value = [rs valueForKeyPath:key];
+                id value = [rs objectForColumnName:key];
                 if ([value isKindOfClass:[NSNull class]]) {
                     continue;
                 }
@@ -92,34 +147,14 @@
     return objects;
 }
 
-
-- (id<ISqliteModel>)queryObjectByCls:(Class)cls
-                     key:(NSString *)key
-                           udid:(NSString *)udid {
-    NSString *sql = [SqliteBuilder querySqlBuildWithClass:cls
-                                                      key:key
-                                                     udid:udid];
-    id<ISqliteModel> obj = [[cls alloc] init];
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:sql];
-        while ([rs next]) {
-            id obj = [[cls alloc] init];
-            id value = [rs valueForKeyPath:key];
-            if ([value isKindOfClass:[NSNull class]]) {
-                value = nil;
-            }
-            [obj setValue:value forKey:key];
-        }
-        [rs close];
-    }];
-    return obj;
-}
-
 - (void)deleteAllObjectsByCls:(Class)cls
                          udid:(NSString *)udid {
+    if (![self buildTableByCls:cls udid:udid]) {
+        return;
+    }
     NSString *sql = [SqliteBuilder deleteAllSqlBuildWithCls:cls
                                                        udid:udid];
-    [self.dbQueue inDatabase:^(FMDatabase *db) {
+    [self.dbQueue(udid) inDatabase:^(FMDatabase *db) {
         [db executeUpdate:sql];
     }];
 }

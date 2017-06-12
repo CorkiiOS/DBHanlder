@@ -70,4 +70,26 @@
 + (NSString *)deleteAllSqlBuildWithCls:(Class)cls
                                   udid:(NSString *)udid;
 
+
+/**
+ 构建 insert sql
+
+ @param object 模型
+ @param udid 用户id
+ @return sql
+ */
++ (NSString *)insertSqlBuildWithObject:(id)object
+                                  udid:(NSString *)udid;
+/**
+ 构建 uodate sql
+ 
+ @param object 模型
+ @param udid 用户id
+ @return sql
+ */
++ (NSString *)updateSqlBuildWithObject:(id)object
+                                  udid:(NSString *)udid;
+
++ (NSString *)querySqlBuildWithObject:(id)object
+                                 udid:(NSString *)udid;
 @end

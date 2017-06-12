@@ -53,6 +53,38 @@
     return result;
 }
 
++ (void)getColumnNamesAndValuesWithObject:(id)object completion:(void (^)(NSString *, NSString *, NSArray *, NSArray *))completion {
+    
+    NSString *primaryKey = [object primaryKey];
+    
+    NSString *tableName = [SqliteObject getTableNameWithObjectClass:[object class]];
+    
+    NSArray *columnNames = [SqliteObject getAllIvarNames:[object class]];
+    
+    NSMutableArray *values = [NSMutableArray array];
+    
+    for (NSString *columnName in columnNames) {
+        
+        id value = [object valueForKeyPath:columnName];
+        
+        if ([value isKindOfClass:[NSArray class]] ||
+            [value isKindOfClass:[NSDictionary class]]) {
+            
+            NSData *data = [NSJSONSerialization dataWithJSONObject:value options:NSJSONWritingPrettyPrinted error:nil];
+            
+            value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+        
+        if (value == nil) {
+            value = @"";
+        }
+        
+        [values addObject:value];
+    }
+    
+    completion(tableName,primaryKey,columnNames, values);
+}
+
 /**
  获取模型里面所有的字段
  */

@@ -20,15 +20,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self saveModels];
+
+    
 }
 - (void)saveModel {
     
     //保存模型
     DB_TestModel *model = [[DB_TestModel alloc] init];
-    model.username = @"牛牛牛";
-    model.sex = @"母";
+    model.username = @"牛aaaa牛";
+    model.sex = @"yayaydadadada";
     model.sign = @"牛牛牛大大";
-    model.key = @"336699";
+    model.key = @"336699ssssss";
     [[SqliteQueueUtils sharedInstance] saveObject:model udid:nil];
 }
 
@@ -39,21 +41,22 @@
         //保存模型
         DB_TestModel *model = [[DB_TestModel alloc] init];
         model.username = @"牛牛牛";
-        model.sex = @"母";
+        model.sex = @"母dadad";
         model.sign = @"牛牛牛大大";
         model.key = [NSString stringWithFormat:@"%d--36699",i + 1000];
         [a addObject:model];
-    }
-    [[SqliteQueueUtils sharedInstance] saveObjects:a udid:nil completion:^(BOOL result) {
         
-        NSLog(@"完成");
-    }];
+    }
+    
+    for (NSInteger i = 0; i < 10; i ++) {
+        
+        [[SqliteQueueUtils sharedInstance] saveObjects:a udid:[NSString stringWithFormat:@"%zd",i + 10000] completion:^(BOOL fis) {
+            
+        }];
+    }
     
 }
-- (void)testCreate {
-    //创建表测试
-    [[SqliteQueueUtils sharedInstance] buildTableByCls:[DB_TestModel class] udid:nil];
-}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

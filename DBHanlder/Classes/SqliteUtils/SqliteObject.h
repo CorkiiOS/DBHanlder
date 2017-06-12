@@ -35,4 +35,7 @@
  */
 + (NSArray <NSString *> *)getAllIvarNames: (Class)cls;
 
++ (void)getColumnNamesAndValuesWithObject:(id)object
+                               completion:(void(^)(NSString *tableName,NSString *primarykey,NSArray *, NSArray *))completion;
+
 @end

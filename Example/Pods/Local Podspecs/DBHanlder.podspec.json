@@ -2,14 +2,14 @@
   "name": "DBHanlder",
   "version": "0.1.0",
   "summary": "A short description of DBHanlder.",
-  "description": "TODO: Add long description of the pod here.",
+  "description": "一个轻量级通过模型操作数据库，对FMDB的二次封装，动态构建sql",
   "homepage": "https://github.com/corkiios/DBHanlder",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "corkiios": "453664988@qq.com"
+    "corkiios": "675053587@qq.com"
   },
   "source": {
     "git": "https://github.com/corkiios/DBHanlder.git",

@@ -10,9 +10,6 @@
 @interface SqliteQueueUtils : NSObject
 + (instancetype)sharedInstance;
 
-- (void)buildTableByCls:(Class)cls
-                   udid:(NSString *)udid;
-
 /**
  储存模型
  
@@ -32,19 +29,6 @@
 - (void)saveObjects:(NSArray <id<ISqliteModel>>*)objects
                udid:(NSString *)udid
          completion:(void(^)(BOOL))completion;
-
-/**
- 根据某个字段查询数据
- 
- @param cls 模型类
- @param key 字段
- @param udid 用户id
- @return id 模型
- */
-- (id<ISqliteModel>)queryObjectByCls:(Class)cls
-                                 key:(NSString *)key
-                                udid:(NSString *)udid;
-
 
 /**
  查询表中所有数据

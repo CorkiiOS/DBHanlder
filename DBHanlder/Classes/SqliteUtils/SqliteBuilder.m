@@ -19,11 +19,8 @@
     }
     
     NSString *primaryKey = [object primaryKey];
-
     NSString *tableName = [SqliteObject getTableNameWithObjectClass:[object class]];
-    
     NSDictionary *typeNameMapping = [SqliteObject getObjectIvarNameIvarTypeWithClass:[object class]];
-    
     NSMutableArray *typeNames = [NSMutableArray array];
     
     [typeNameMapping enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, BOOL * _Nonnull stop) {
@@ -36,86 +33,78 @@
     }];
     
     NSString *typeNameSql = [typeNames componentsJoinedByString:@","];
-    
     NSString *bulidSql = [NSString stringWithFormat:@"create table if not exists %@ (%@ ,%@ %@ primary key not null )", tableName, typeNameSql, primaryKey, typeNameMapping[primaryKey]];
-    
     return bulidSql;
+}
+
++ (NSString *)insertSqlBuildWithObject:(id)object
+                                  udid:(NSString *)udid {
+    
+    __block NSString *sql = nil;
+
+    [SqliteObject getColumnNamesAndValuesWithObject:object completion:^(NSString *tableName, NSString *primaryKey, NSArray *columns, NSArray *values) {
+        
+        NSString *columnNamesSql = [columns componentsJoinedByString:@","];
+        NSString *valuesSql = [values componentsJoinedByString:@"','"];
+        sql = [NSString stringWithFormat:@"insert into %@ (%@) values ('%@')" ,tableName, columnNamesSql, valuesSql];
+                
+    }];
+
+    return sql;
+}
+
++ (NSString *)updateSqlBuildWithObject:(id)object
+                                  udid:(NSString *)udid {
+    
+    __block NSString *sql = nil;
+    
+    [SqliteObject getColumnNamesAndValuesWithObject:object completion:^(NSString *tableName, NSString *primaryKey, NSArray *columns, NSArray *values) {
+        
+        NSString *columnNamesSql = [columns componentsJoinedByString:@","];
+        NSString *valuesSql = [values componentsJoinedByString:@"','"];
+        NSMutableArray *tempResult = [NSMutableArray array];
+        
+        for(int i = 0; i < columns.count; i++) {
+            
+            NSString *columnName = columns[i];
+            id value = values[i];
+            NSString *str = [NSString stringWithFormat:@"%@ = '%@'", columnName, value];
+            [tempResult addObject:str];
+        }
+        sql = [NSString stringWithFormat:@"update %@ set %@ where %@ = '%@'", tableName, [tempResult componentsJoinedByString:@","], primaryKey, [object valueForKeyPath:primaryKey]];
+    }];
+    return sql;
 }
 
 + (NSString *)saveSqlBuildWithObject:(id)object
                                 udid:(NSString *)udid {
     
-    NSString *primaryKey = [object primaryKey];
+    __block NSString *sql = nil;
     
-    NSString *tableName = [SqliteObject getTableNameWithObjectClass:[object class]];
-    
-    NSArray *columnNames = [SqliteObject getAllIvarNames:[object class]];
-    
-    NSMutableArray *values = [NSMutableArray array];
-    
-    for (NSString *columnName in columnNames) {
+    [SqliteObject getColumnNamesAndValuesWithObject:object completion:^(NSString *tableName, NSString *primaryKey, NSArray *columns, NSArray *values) {
         
-        id value = [object valueForKeyPath:columnName];
+        NSString *columnNamesSql = [columns componentsJoinedByString:@","];
+        NSString *valuesSql = [values componentsJoinedByString:@"','"];
+        NSString *selectSql = [NSString stringWithFormat:@"select * from %@ where %@ = '%@'", tableName, primaryKey, [object valueForKeyPath:primaryKey]];
+        NSArray *res = [SqliteDeals querySql:selectSql udid:udid];
         
-        if ([value isKindOfClass:[NSArray class]] ||
-            [value isKindOfClass:[NSDictionary class]]) {
+        if (res.count > 0) {
             
-            NSData *data = [NSJSONSerialization dataWithJSONObject:value options:NSJSONWritingPrettyPrinted error:nil];
+            sql = [self updateSqlBuildWithObject:object udid:udid];
             
-            value = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }else {
+            
+            sql = [self insertSqlBuildWithObject:object udid:udid];
         }
-        
-        if (value == nil) {
-            value = @"";
-        }
-        
-        [values addObject:value];
-    }
-    
-    NSString *columnNamesSql = [columnNames componentsJoinedByString:@","];
-    
-    NSString *valuesSql = [values componentsJoinedByString:@"','"];
-    
-    NSString *insertSql = nil;
-    
-    NSString *updateSql = nil;
-    
-    NSString *selectSql = [NSString stringWithFormat:@"select * from %@ where %@ = '%@'", tableName, primaryKey, [object valueForKeyPath:primaryKey]];
-    
-    NSArray *res = [SqliteDeals querySql:selectSql udid:udid];
-    
-    if (res.count > 0) {
-        
-        NSMutableArray *tempResult = [NSMutableArray array];
-        
-        for(int i = 0; i < columnNames.count; i++) {
-            
-            NSString *columnName = columnNames[i];
-            
-            id value = values[i];
-            
-            NSString *str = [NSString stringWithFormat:@"%@ = '%@'", columnName, value];
-            
-            [tempResult addObject:str];
-        }
-        
-        updateSql = [NSString stringWithFormat:@"update %@ set %@ where %@ = '%@'", tableName, [tempResult componentsJoinedByString:@","], primaryKey, [object valueForKeyPath:primaryKey]];
-        
-        return updateSql;
-        
-    }else {
-        
-        insertSql = [NSString stringWithFormat:@"insert into %@ (%@) values ('%@')" ,tableName, columnNamesSql, valuesSql];
-        
-        return insertSql;
-    }
 
+    }];
+    
+    return sql;
 }
 
 + (NSString *)queryAllSqlBuildWithClass:(Class)cls udid:(NSString *)udid {
     
     NSString *tableName = [SqliteObject getTableNameWithObjectClass:cls];
-    
     return [NSString stringWithFormat:@"select * from %@",tableName];
 }
 
@@ -124,21 +113,25 @@
                                    udid:(NSString *)udid {
     
     NSString *tableName = [SqliteObject getTableNameWithObjectClass:cls];
-    
     NSString *primaryKey = [[cls new] primaryKey];
-
     return [NSString stringWithFormat:@"select * from %@ where %@ = '%@' ",tableName,primaryKey,key];
 }
+
++ (NSString *)querySqlBuildWithObject:(id)object
+                                udid:(NSString *)udid {
+    
+    NSString *tableName = [SqliteObject getTableNameWithObjectClass:[object class]];
+    NSString *primaryKey = [object primaryKey];
+    return [NSString stringWithFormat:@"select * from %@ where %@ = '%@' ",tableName,primaryKey,[object valueForKey:primaryKey]];
+}
+
 
 + (NSString *)deleteSqlBuildWithObject:(id)object
                                   udid:(NSString *)udid {
     
     NSString *primaryKey = [object primaryKey];
-    
     NSString *tableName = [SqliteObject getTableNameWithObjectClass:[object class]];
-    
     NSString *sql = [NSString stringWithFormat:@"delete from %@ where %@ = '%@'",tableName, primaryKey, [object valueForKeyPath:primaryKey]];
-    
     return sql;
 }
 
@@ -146,7 +139,7 @@
                                   udid:(NSString *)udid {
     
     NSString *tableName = [SqliteObject getTableNameWithObjectClass:cls];
-    NSString *sql = [NSString stringWithFormat:@"delete * from %@ ",tableName];
+    NSString *sql = [NSString stringWithFormat:@"delete from %@ ",tableName];
     return sql;
 }
 @end

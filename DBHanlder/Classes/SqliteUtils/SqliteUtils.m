@@ -23,18 +23,14 @@
                  udid: (NSString *)udid {
     
     NSString *sql = @"select name from sqlite_master";
-    
     NSArray <NSDictionary *>*resultSet = [SqliteDeals querySql:sql udid:udid];
-    
     __block BOOL isTableExists = NO;
     
     [resultSet enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
         if ([[obj[@"name"] lowercaseString] isEqualToString:[tableName lowercaseString]]) {
             isTableExists = YES;
         }
     }];
-    
     return isTableExists;
 }
 
