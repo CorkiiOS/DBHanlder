@@ -118,7 +118,7 @@
 
 * To run the example project, clone the repo, and run `pod install` from the Example directory first.
 * 需要保存的模型必须遵守ISqliteModel,得到主键和忽略字段
-
+* #improt "DBHanlder.h"
 ### SqliteQueueUtils 线程安全
 
 
