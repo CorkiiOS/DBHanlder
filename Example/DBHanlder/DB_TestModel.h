@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong)NSString *username;
 @property (nonatomic, strong)NSString *sign;
-@property (nonatomic, strong)NSString *sex;
-@property (nonatomic, strong)NSString *key;
+@property (nonatomic, assign)BOOL sex;
+@property (nonatomic, assign)NSInteger key;
 @end

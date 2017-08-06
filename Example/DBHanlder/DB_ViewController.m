@@ -10,6 +10,8 @@
 #import "DB_TestModel.h"
 #import "SqliteQueueUtils.h"
 #import "SqliteUtils.h"
+#import "ICSqliteBuilder.h"
+
 @interface DB_ViewController ()
 
 @end
@@ -20,7 +22,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [self saveModels];
+    NSString *c_sql = [ICSqliteBuilder tableSqlBuildWithClass:[DB_TestModel class]
+                                                         udid:nil];
 
     
 }
